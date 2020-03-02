@@ -56,14 +56,20 @@ func _ready():
 	#calculate_satisf(_productionPepe)
 	print ("Satisf = "+ String(calculate_satisf()))
 	
-	
+	print ("calculate_combinations(3):")	
 	var combinations = calculate_combinations(3)
-	print ("calculate_combinations(3):")
 	print (combinations)
-	
+
+	print ("calculate_combinations_exact_num_of_elem(3, self._products): ")		
 	var combinations_2 = calculate_combinations_exact_num_of_elem(3, self._products)
-	print ("calculate_combinations_exact_num_of_elem(3, self._products): ")	
-	print(combinations_2)
+
+#	print(combinations_2)
+#	for combination in combinations_2:
+#		print ("combination")
+#		print (combination)
+#		for elem in combination:
+#			print ("elem")
+#			print (elem)
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -206,48 +212,53 @@ class SatisfPlotter:
 			canvas_item.draw_line(Vector2((x_left+x1),y_bottom-y1), Vector2((x_left+x2), y_bottom-y2), color_arg, 1)
 
 
-func calculate_combinations(max_num_elements_arg:int)->Array:
-	var combination_list = Array()
-	for num_elem in range(1,max_num_elements_arg):
+#func calculate_combinations(max_num_elements_arg:int)->Array:
+func calculate_combinations(max_num_elements_arg:int)->Dictionary:
+	#var combination_list = Array()
+	var combination_dict = Dictionary()
+	for num_elem in range(1,max_num_elements_arg+1):
 		var combination_list_of_exact_number_of_elements = calculate_combinations_exact_num_of_elem(num_elem,self._products)
-		#combination_list += combination_list_of_exact_number_of_elements
-		combination_list.push_back(combination_list_of_exact_number_of_elements)
-	return combination_list
+		#combination_list.push_back(combination_list_of_exact_number_of_elements)
+		combination_dict[num_elem] = combination_list_of_exact_number_of_elements;
+	#return combination_list
+	return combination_dict
 
 func calculate_combinations_exact_num_of_elem(exact_num_elements_arg:int, list_of_prod:Array)->Array:
-	var combination_products_number_dict = Dictionary()
+	#[{candy:3, chocolate:0}, {candy:2, chocolate:1}, {candy:1, chocolate:2}, {candy:0, chocolate:3}]
+
 	var combination_list = Array()
 	var used_products = Array()
-	for prod in list_of_prod:
-		for num in range(0,exact_num_elements_arg):
-			var rest_of_products = list_of_prod.duplicate(true) #copia del array
-			used_products.append(prod)
-			for used_prod in used_products:				
-				rest_of_products.erase(used_prod)
+	
+	if list_of_prod.size()>0:
+		var prod = list_of_prod.front()
+
+		var rest_of_products = list_of_prod.duplicate(true) #copia del array
+		used_products.append(prod)
+		for used_prod in used_products:
+			rest_of_products.erase(used_prod)
+
+		for num in range(0,exact_num_elements_arg+1):
 			
 			var subcombination_list = Array()
 			if rest_of_products.size() > 0:
+
 				subcombination_list = calculate_combinations_exact_num_of_elem(exact_num_elements_arg-num,rest_of_products)
-		
-				var dict_prod_num = { prod:num}
-				for subcombination in subcombination_list:
-					subcombination.append(dict_prod_num)
+
+				for dict in subcombination_list:
+					dict[prod] = num
+
+				for elem in subcombination_list:
+					combination_list.append(elem)
 				
-				var count_of_prod_in_subcombi = 0
-				for subcombination in subcombination_list:
-					for diction in subcombination:
-						for prod_2 in diction:
-							if(diction.has(prod_2)):
-								var num_of_prod_2 = diction[prod_2]
-								count_of_prod_in_subcombi += num_of_prod_2
-						
-				if(count_of_prod_in_subcombi==exact_num_elements_arg):
-					combination_list.append(subcombination_list)
 			else:
-				var dict_prod_num = { prod:exact_num_elements_arg}
-				subcombination_list.append(dict_prod_num)
-				#combination_list += subcombination_list
-				combination_list.append(subcombination_list)
-				break
-				
+				if (num==exact_num_elements_arg):
+					var dict_prod_num = { prod:num}
+					
+					subcombination_list.append(dict_prod_num)
+
+					for elem in subcombination_list:
+						combination_list.append(elem)
+
+					break
+					
 	return combination_list
