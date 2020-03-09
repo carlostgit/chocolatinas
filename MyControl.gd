@@ -1,7 +1,9 @@
 extends Control
 
 
-var font = load("res://new_dynamicfont.tres")
+var _font = load("res://new_dynamicfont.tres")
+var _satisf_plotter = load("res://SatisfPoltter.gd")
+
 # Declare member variables here. Examples:
 #var _persons = ["Pepe", "Paco"]
 var _products = ["chocolate","candy"]
@@ -24,35 +26,14 @@ var _combo = {"sweets":["chocolate","candy"]}
 var _param_combo_preference_at_0 = {"sweets":10.8}
 var _param_combo_maximum_quantity_satisf = {"sweets":3.0}
 
-var satisf_plotter = null
+#var satisf_plotter = null
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	#var arr = [1, 2, 3]
-#	var dict = {"a": 0, "b": 1, "c": 2}
-#	for i in dict:
-#		print(i)
-#		print(dict[i])
-		
-#	for i in range(0,100):
-#		print(i)
-#		print(get_diminishing_returns_factor(i))
-#
-#		var y_bottom:float = 500
-#	var x_left:float = 10
-#
-#	var x_zoom:float = 6
-#	var y_zoom:float = 40.0
-#
-#	var max_quantity = 5
-#
-##	var x_scale:float = 200
-##	var y_scale:float = 200
 
-#
 #	var num_of_calculated_points = 100
-	satisf_plotter = SatisfPlotter.new(400, 10, 6,40.0,5.0,100, self, font)
-	satisf_plotter.draw_background()
+	_satisf_plotter = SatisfPlotter.new(400, 10, 6,40.0,5.0,100, self, _font)
+	_satisf_plotter.draw_background()
 	#calculate_satisf(_productionPepe)
 	print ("Satisf = "+ String(calculate_satisf()))
 	
@@ -63,13 +44,6 @@ func _ready():
 	print ("calculate_combinations_exact_num_of_elem(3, self._products): ")		
 	var combinations_2 = calculate_combinations_exact_num_of_elem(3, self._products)
 	
-	#[{candy:3, chocolate:0}, {candy:2, chocolate:1}, {candy:1, chocolate:2}, {candy:0, chocolate:3}]
-#	var count = 0
-#	for dict in combinations_2:
-#		var satisfaction:float = calculate_satisfaction_of_combination(dict)
-#		print ("combination: ")
-#		print (satisfaction)
-#		count += 1
 	
 	var combination_3 = {"chocolate": 23, "candy": 52}
 	var combo_satisfaction_3:float = calculate_satisfaction_of_prod_combos_in_combination(combination_3)
@@ -211,15 +185,15 @@ func get_diminishing_returns_factor(quantity_arg:float) -> float:
 
 func _draw():
 
-	satisf_plotter.draw_background()
-	
+	_satisf_plotter.draw_background()
+
 	for product in self._products:
 		var my_funcref = funcref( self, "calculate_satifaction_of_product")
-		satisf_plotter.draw(my_funcref,product)
+		_satisf_plotter.draw(my_funcref,product)
 
 	for combi in self._combo:
 		var my_funcref = funcref( self, "calculate_satifaction_of_prod_combo")
-		satisf_plotter.draw(my_funcref,combi, Color(1,0,0))
+		_satisf_plotter.draw(my_funcref,combi, Color(1,0,0))
 	pass
 	#calculate_satisf(_productionPepe)
 	
@@ -228,60 +202,60 @@ func _draw():
 ################################################
 ################################################
 #Clase SatisfPlotter. Sacar mejor a otro fichero
-class SatisfPlotter:
-	var y_bottom:float = 500
-	var x_left:float = 10
-	
-	var x_zoom:float = 6
-	var y_zoom:float = 40.0
-	
-	var max_quantity:float = 5
-
-	var num_of_calculated_points:int = 100
-	
-	var canvas_item:CanvasItem = null
-	
-	var font:Font = null
-	var quantity_per_point:float = 0.0
-
-	func _init(y_bottom_arg:float, x_left_arg:float, x_zoom_arg:float,y_zoom_arg:float,max_quantity_arg:float,num_of_calculated_points_arg:int, canvas_item_arg:CanvasItem, font_arg:Font):
-		y_bottom=y_bottom_arg
-		x_left=x_left_arg
-		
-		x_zoom=x_zoom_arg
-		y_zoom=y_zoom_arg
-		
-		max_quantity = max_quantity_arg
-	
-		num_of_calculated_points=num_of_calculated_points_arg
-		canvas_item = canvas_item_arg
-		font = font_arg	
-		
-		quantity_per_point = float(max_quantity)/float(num_of_calculated_points)
-	
-	func draw_background():
-		
-		
-		canvas_item.draw_line(Vector2(x_left,y_bottom),Vector2(800+x_left,y_bottom), Color(1,1,1))
-	
-		canvas_item.draw_line(Vector2(x_left,y_bottom-1*y_zoom),Vector2(800+x_left,y_bottom-1*y_zoom), Color(1,1,1)) #Value of 1 line
-		canvas_item.draw_line(Vector2(num_of_calculated_points*x_zoom+x_left,y_bottom),Vector2(num_of_calculated_points*x_zoom+x_left,0), Color(1,1,1)) #Cuantity of 100 line
-		
-		for line in range(1,10):
-			canvas_item.draw_line(Vector2((line*num_of_calculated_points/10)*x_zoom+x_left,y_bottom),Vector2((line*num_of_calculated_points/10)*x_zoom+x_left,0), Color(1,1,1)) #Cuantity of 50 line
-		
-		canvas_item.draw_string(font,Vector2(num_of_calculated_points*x_zoom+x_left,y_bottom+10),String(max_quantity),Color(1,1,1))
-		canvas_item.draw_string(font,Vector2(0,y_bottom-1*y_zoom),"1",Color(1,1,1))
-			
-	func draw(var myfunc, var func_arg, color_arg:Color = Color(0,1,0)):
-		
-		for i in range(0,num_of_calculated_points):	
-				
-			var x1:float = x_zoom*float(i)
-			var x2:float = x_zoom*float(i+1)
-			var y1:float = y_zoom*myfunc.call_func(func_arg,i*quantity_per_point)
-			var y2:float = y_zoom*myfunc.call_func(func_arg,(i+1)*quantity_per_point)
-			canvas_item.draw_line(Vector2((x_left+x1),y_bottom-y1), Vector2((x_left+x2), y_bottom-y2), color_arg, 1)
+#class SatisfPlotter:
+#	var y_bottom:float = 500
+#	var x_left:float = 10
+#
+#	var x_zoom:float = 6
+#	var y_zoom:float = 40.0
+#
+#	var max_quantity:float = 5
+#
+#	var num_of_calculated_points:int = 100
+#
+#	var canvas_item:CanvasItem = null
+#
+#	var font:Font = null
+#	var quantity_per_point:float = 0.0
+#
+#	func _init(y_bottom_arg:float, x_left_arg:float, x_zoom_arg:float,y_zoom_arg:float,max_quantity_arg:float,num_of_calculated_points_arg:int, canvas_item_arg:CanvasItem, font_arg:Font):
+#		y_bottom=y_bottom_arg
+#		x_left=x_left_arg
+#
+#		x_zoom=x_zoom_arg
+#		y_zoom=y_zoom_arg
+#
+#		max_quantity = max_quantity_arg
+#
+#		num_of_calculated_points=num_of_calculated_points_arg
+#		canvas_item = canvas_item_arg
+#		font = font_arg	
+#
+#		quantity_per_point = float(max_quantity)/float(num_of_calculated_points)
+#
+#	func draw_background():
+#
+#
+#		canvas_item.draw_line(Vector2(x_left,y_bottom),Vector2(800+x_left,y_bottom), Color(1,1,1))
+#
+#		canvas_item.draw_line(Vector2(x_left,y_bottom-1*y_zoom),Vector2(800+x_left,y_bottom-1*y_zoom), Color(1,1,1)) #Value of 1 line
+#		canvas_item.draw_line(Vector2(num_of_calculated_points*x_zoom+x_left,y_bottom),Vector2(num_of_calculated_points*x_zoom+x_left,0), Color(1,1,1)) #Cuantity of 100 line
+#
+#		for line in range(1,10):
+#			canvas_item.draw_line(Vector2((line*num_of_calculated_points/10)*x_zoom+x_left,y_bottom),Vector2((line*num_of_calculated_points/10)*x_zoom+x_left,0), Color(1,1,1)) #Cuantity of 50 line
+#
+#		canvas_item.draw_string(font,Vector2(num_of_calculated_points*x_zoom+x_left,y_bottom+10),String(max_quantity),Color(1,1,1))
+#		canvas_item.draw_string(font,Vector2(0,y_bottom-1*y_zoom),"1",Color(1,1,1))
+#
+#	func draw(var myfunc, var func_arg, color_arg:Color = Color(0,1,0)):
+#
+#		for i in range(0,num_of_calculated_points):	
+#
+#			var x1:float = x_zoom*float(i)
+#			var x2:float = x_zoom*float(i+1)
+#			var y1:float = y_zoom*myfunc.call_func(func_arg,i*quantity_per_point)
+#			var y2:float = y_zoom*myfunc.call_func(func_arg,(i+1)*quantity_per_point)
+#			canvas_item.draw_line(Vector2((x_left+x1),y_bottom-y1), Vector2((x_left+x2), y_bottom-y2), color_arg, 1)
 
 
 #func calculate_combinations(max_num_elements_arg:int)->Array:
