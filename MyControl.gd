@@ -2,7 +2,7 @@ extends Control
 
 
 var _font = load("res://new_dynamicfont.tres")
-var _satisf_plotter = load("res://SatisfPoltter.gd")
+var _satisf_plotter = load("res://SatisfPlotter.gd")
 
 # Declare member variables here. Examples:
 #var _persons = ["Pepe", "Paco"]
@@ -24,7 +24,7 @@ var _param_combo_maximum_quantity_satisf = {"sweets":3.0}
 func _ready():
 
 	_satisf_plotter = SatisfPlotter.new(400, 10, 6,40.0,5.0,100, self, _font)
-	_satisf_plotter.draw_background()
+	#satisf_plotter.draw_background()
 
 	print ("Satisf = "+ String(calculate_satisf()))
 	

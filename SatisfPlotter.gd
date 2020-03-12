@@ -2,16 +2,6 @@ extends Node
 
 class_name SatisfPlotter
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-################################################
-################################################
-#Clase SatisfPlotter. Sacar mejor a otro fichero
 
 var y_bottom:float = 500
 var x_left:float = 10
