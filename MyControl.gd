@@ -4,6 +4,10 @@ extends Control
 var _font = load("res://new_dynamicfont.tres")
 var _satisf_plotter = load("res://SatisfPlotter.gd")
 
+onready var my_item_list = get_node("MyItemList")
+var dibujo = load("res://icon.png")
+
+
 # Declare member variables here. Examples:
 #var _persons = ["Pepe", "Paco"]
 var _products = ["chocolate","candy"]
@@ -29,20 +33,50 @@ func _ready():
 	print ("Satisf = "+ String(calculate_satisf()))
 	
 	print ("calculate_combinations(3):")	
-	var combinations = calculate_combinations(3)
-	print (combinations)
+	var num_elem_combination_dict = calculate_combinations(3)
+#	print (num_elem_combination_dict)
 
-	print ("calculate_combinations_exact_num_of_elem(3, self._products): ")		
-	var combinations_2 = calculate_combinations_exact_num_of_elem(3, self._products)
+	var combination_satisfaction_dict:Dictionary = Dictionary()
+	var satisfaction_combination_array:Array = Array()
+	for combinations in num_elem_combination_dict.values():
+		for combination in combinations:		
+			var satisfaction:float = calculate_satisfaction_of_combination(combination)
+			print ("satisfaction: "+ str(satisfaction))
+#			print ("combination: ")
+			print (combination)
+			combination_satisfaction_dict[combination] = satisfaction
+			var satisf_combi_pair:Dictionary = Dictionary()
+			satisf_combi_pair[satisfaction] = combination
+			satisfaction_combination_array.append(satisf_combi_pair)
+
+	print(satisfaction_combination_array)
+	satisfaction_combination_array.sort_custom(MyCustomSorter, "sort")
+	
+	for satisfaction_combination in satisfaction_combination_array:
+		print(satisfaction_combination)
+		print (satisfaction_combination.keys()[0])
 		
-	var combination_3 = {"chocolate": 23, "candy": 52}
-	var combo_satisfaction_3:float = calculate_satisfaction_of_prod_combos_in_combination(combination_3)
-	print ("combination_3: ")
-	print (combination_3)
-	print ("combo_satisfaction_3: ")
-	print (combo_satisfaction_3)
+
+
+#	print ("calculate_combinations_exact_num_of_elem(3, self._products): ")		
+#	var combinations_2 = calculate_combinations_exact_num_of_elem(3, self._products)
+#
+#	var combination_3 = {"chocolate": 23, "candy": 52}
+#	var combo_satisfaction_3:float = calculate_satisfaction_of_prod_combos_in_combination(combination_3)
+#	print ("combination_3: ")
+#	print (combination_3)
+#	print ("combo_satisfaction_3: ")
+#	print (combo_satisfaction_3)	
+	
+	#todo:
+	#my_item_list.set_max_columns(2)
+	my_item_list.set_icon_mode(ItemList.ICON_MODE_TOP)
+	for i in range(0,5):	
+		my_item_list.add_icon_item(dibujo)
+	
 	
 	pass # Replace with function body.
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -97,8 +131,8 @@ func calculate_satisfaction_of_prod_combos_in_combination(combination:Dictionary
 		for prod in prods_in_combo:
 			dict_prod_of_combo_repetitions[prod] = 0.0
 
-		print ("dict_prod_of_combo_repetitions:")
-		print (dict_prod_of_combo_repetitions)
+#		print ("dict_prod_of_combo_repetitions:")
+#		print (dict_prod_of_combo_repetitions)
 
 		for prod in combination.keys():
 			var num_of_prod:float = combination[prod]
@@ -106,8 +140,8 @@ func calculate_satisfaction_of_prod_combos_in_combination(combination:Dictionary
 				if dict_prod_of_combo_repetitions.has(prod):
 					dict_prod_of_combo_repetitions[prod] = num_of_prod
 
-		print ("dict_prod_of_combo_repetitions 2:")
-		print (dict_prod_of_combo_repetitions)
+#		print ("dict_prod_of_combo_repetitions 2:")
+#		print (dict_prod_of_combo_repetitions)
 
 			
 		var min_of_comb_in_combination:float = 0.0
@@ -123,8 +157,8 @@ func calculate_satisfaction_of_prod_combos_in_combination(combination:Dictionary
 		else:
 			min_of_comb_in_combination = 0.0
 
-		print ("min_of_comb_in_combination:")
-		print (min_of_comb_in_combination)
+#		print ("min_of_comb_in_combination:")
+#		print (min_of_comb_in_combination)
 
 
 		if min_of_comb_in_combination > 0.0:
@@ -233,3 +267,12 @@ func calculate_combinations_exact_num_of_elem(exact_num_elements_arg:int, list_o
 					break
 					
 	return combination_list
+	
+
+class MyCustomSorter:
+	static func sort(satisf_combi_pair_a:Dictionary, satisf_combi_pair_b:Dictionary):
+		if (satisf_combi_pair_a.keys()[0] < satisf_combi_pair_b.keys()[0]):
+			return true
+		else:
+			return false
+			
