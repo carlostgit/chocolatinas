@@ -9,12 +9,18 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "ItemList",
+"class": "CombinationItemList",
+"language": "GDScript",
+"path": "res://CombinationItemList.gd"
+}, {
 "base": "Node",
 "class": "SatisfPlotter",
 "language": "GDScript",
 "path": "res://SatisfPlotter.gd"
 } ]
 _global_script_class_icons={
+"CombinationItemList": "",
 "SatisfPlotter": ""
 }
 

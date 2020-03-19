@@ -3,9 +3,12 @@ extends Control
 
 var _font = load("res://new_dynamicfont.tres")
 var _satisf_plotter = load("res://SatisfPlotter.gd")
+#var _combination_item_list = load("res://CombinationItemList.gd")
 
-onready var my_item_list = get_node("MyItemList")
-var dibujo = load("res://icon.png")
+#onready var my_item_list = get_node("MyItemList")
+var dibujo:Texture = load("res://icon.png")
+var candy:Texture = load("res://candy.png")
+var chocolate:Texture = load("res://chocolate.png")
 
 
 # Declare member variables here. Examples:
@@ -70,10 +73,32 @@ func _ready():
 	
 	#todo:
 	#my_item_list.set_max_columns(2)
-	my_item_list.set_icon_mode(ItemList.ICON_MODE_TOP)
-	for i in range(0,5):	
-		my_item_list.add_icon_item(dibujo)
+	#my_item_list.set_position(Vector2(20,20))
+	#my_item_list.set_icon_mode(ItemList.ICON_MODE_TOP)
+	#for i in range(0,5):	
+	#	my_item_list.add_icon_item(dibujo)
+
+#	#var item2:ItemList = ItemList.new()
+#	var item2 = CombinationItemList.new()
+#	item2.set_position(Vector2(20,20))
+#	var tamano_icon:Vector2 = dibujo.get_size()
+#	item2.add_icon_item(dibujo)
+#	item2.set_size(tamano_icon)
+#	var viejo_tamano_list:Vector2 = item2.get_size()
+#	var nueva_altura_list:float = viejo_tamano_list.y + tamano_icon.y
+#	var nuevo_tamano_list:Vector2 = Vector2(tamano_icon.x,nueva_altura_list)
+#	item2.set_size(nuevo_tamano_list)
+#	item2.add_icon_item(chocolate)
+#	add_child(item2)
+
+	var item2 = CombinationItemList.new()
+	item2.set_position(Vector2(80,80))
+	add_child(item2)
 	
+	#var button:Button = Button.new()
+	#button.set_position(Vector2(50,50))
+	#button.set_text("hello")
+	#add_child(button)
 	
 	pass # Replace with function body.
 
