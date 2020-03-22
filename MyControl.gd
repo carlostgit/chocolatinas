@@ -91,8 +91,8 @@ func _ready():
 #	item2.add_icon_item(chocolate)
 #	add_child(item2)
 
-	var item2 = CombinationItemList.new()
-	item2.set_position(Vector2(80,80))
+	var item2 = CombinationItemList.new(self)
+	item2.set_position(Vector2(20,80))
 	add_child(item2)
 	
 	#var button:Button = Button.new()
