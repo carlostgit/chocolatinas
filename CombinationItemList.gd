@@ -33,6 +33,13 @@ func _ready():
 		
 	self.set_size(Vector2(total_width,total_height))
 	
+	for combination_dict in _combinations:
+		for product in combination_dict.keys():
+			if(product == "chocolate"):
+				self.add_icon_item(chocolate)
+			elif (product == "candy"):
+				self.add_icon_item(candy)
+	
 	
 	
 	
