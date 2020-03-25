@@ -6,9 +6,9 @@ var _satisf_plotter = load("res://SatisfPlotter.gd")
 #var _combination_item_list = load("res://CombinationItemList.gd")
 
 #onready var my_item_list = get_node("MyItemList")
-var dibujo:Texture = load("res://icon.png")
-var candy:Texture = load("res://candy.png")
-var chocolate:Texture = load("res://chocolate.png")
+#var dibujo:Texture = load("res://icon.png")
+#var candy:Texture = load("res://candy.png")
+#var chocolate:Texture = load("res://chocolate.png")
 
 
 # Declare member variables here. Examples:
@@ -55,9 +55,11 @@ func _ready():
 	print(satisfaction_combination_array)
 	satisfaction_combination_array.sort_custom(MyCustomSorter, "sort")
 	
+	var array_of_comb:Array = Array()
 	for satisfaction_combination in satisfaction_combination_array:
 		print(satisfaction_combination)
 		print (satisfaction_combination.keys()[0])
+		array_of_comb.append(satisfaction_combination[satisfaction_combination.keys()[0]])
 		
 
 
@@ -91,7 +93,7 @@ func _ready():
 #	item2.add_icon_item(chocolate)
 #	add_child(item2)
 
-	var item2 = CombinationItemList.new(self)
+	var item2 = CombinationItemList.new(self,array_of_comb)
 	item2.set_position(Vector2(20,80))
 	add_child(item2)
 	
