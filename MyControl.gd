@@ -36,64 +36,20 @@ func _ready():
 	print ("Satisf = "+ String(calculate_satisf()))
 	
 	print ("calculate_combinations(3):")	
-	var num_elem_combination_dict = calculate_combinations(3)
-#	print (num_elem_combination_dict)
+	#var num_elem_combination_dict = calculate_combinations(3)
+	var combinations = calculate_combinations(3)
 
-	var combination_satisfaction_dict:Dictionary = Dictionary()
-	var satisfaction_combination_array:Array = Array()
-	for combinations in num_elem_combination_dict.values():
-		for combination in combinations:		
-			var satisfaction:float = calculate_satisfaction_of_combination(combination)
-			print ("satisfaction: "+ str(satisfaction))
-#			print ("combination: ")
-			print (combination)
-			combination_satisfaction_dict[combination] = satisfaction
-			var satisf_combi_pair:Dictionary = Dictionary()
-			satisf_combi_pair[satisfaction] = combination
-			satisfaction_combination_array.append(satisf_combi_pair)
 
-	print(satisfaction_combination_array)
-	satisfaction_combination_array.sort_custom(MyCustomSorter, "sort")
 	
-	var array_of_comb:Array = Array()
+	var satisfaction_combination_array:Array = get_satisfaction_combination_ordered_array_from_combinations(combinations)
+
+	var ordered_array_of_comb:Array = Array()
 	for satisfaction_combination in satisfaction_combination_array:
 		print(satisfaction_combination)
 		print (satisfaction_combination.keys()[0])
-		array_of_comb.append(satisfaction_combination[satisfaction_combination.keys()[0]])
-		
+		ordered_array_of_comb.append(satisfaction_combination[satisfaction_combination.keys()[0]])
 
-
-#	print ("calculate_combinations_exact_num_of_elem(3, self._products): ")		
-#	var combinations_2 = calculate_combinations_exact_num_of_elem(3, self._products)
-#
-#	var combination_3 = {"chocolate": 23, "candy": 52}
-#	var combo_satisfaction_3:float = calculate_satisfaction_of_prod_combos_in_combination(combination_3)
-#	print ("combination_3: ")
-#	print (combination_3)
-#	print ("combo_satisfaction_3: ")
-#	print (combo_satisfaction_3)	
-	
-	#todo:
-	#my_item_list.set_max_columns(2)
-	#my_item_list.set_position(Vector2(20,20))
-	#my_item_list.set_icon_mode(ItemList.ICON_MODE_TOP)
-	#for i in range(0,5):	
-	#	my_item_list.add_icon_item(dibujo)
-
-#	#var item2:ItemList = ItemList.new()
-#	var item2 = CombinationItemList.new()
-#	item2.set_position(Vector2(20,20))
-#	var tamano_icon:Vector2 = dibujo.get_size()
-#	item2.add_icon_item(dibujo)
-#	item2.set_size(tamano_icon)
-#	var viejo_tamano_list:Vector2 = item2.get_size()
-#	var nueva_altura_list:float = viejo_tamano_list.y + tamano_icon.y
-#	var nuevo_tamano_list:Vector2 = Vector2(tamano_icon.x,nueva_altura_list)
-#	item2.set_size(nuevo_tamano_list)
-#	item2.add_icon_item(chocolate)
-#	add_child(item2)
-
-	var item2 = CombinationItemList.new(self,array_of_comb)
+	var item2 = CombinationItemList.new(self,ordered_array_of_comb)
 	item2.set_position(Vector2(20,80))
 	add_child(item2)
 	
@@ -110,6 +66,23 @@ func _process(delta):
 	#print("_process called")
 	self.update()
 	#pass
+
+func get_satisfaction_combination_ordered_array_from_combinations(combinations:Array) -> Array:
+
+	var combination_satisfaction_dict:Dictionary = Dictionary()
+	var satisfaction_combination_array:Array = Array()
+	#for combinations in num_elem_combination_dict.values():
+	for combination in combinations:		
+		var satisfaction:float = calculate_satisfaction_of_combination(combination)
+		
+		combination_satisfaction_dict[combination] = satisfaction
+		var satisf_combi_pair:Dictionary = Dictionary()
+		satisf_combi_pair[satisfaction] = combination
+		satisfaction_combination_array.append(satisf_combi_pair)
+
+	satisfaction_combination_array.sort_custom(MyCustomSorter, "sort")
+	
+	return satisfaction_combination_array
 
 func calculate_satisf() -> float:
 	var satisfaction_return = 0.0
@@ -246,16 +219,41 @@ func _draw():
 	pass
 	
 
-func calculate_combinations(max_num_elements_arg:int)->Dictionary:
+func calculate_combinations(max_num_elements_arg:int)->Array:
+	#Devuelve array de diccionarios. Por ejemplo:
+	#[{candy:1, chocolate:0},#1 
+	#{candy:0, chocolate:1},
+	#{candy:2, chocolate:0},#2 
+	#{candy:1, chocolate:1}, 
+	#{candy:0, chocolate:2}]
+	var num_elements_combinations_dict:Dictionary = calculate_num_elem_combinations_dict(max_num_elements_arg)
+	var combinations_array:Array = Array()
+	for key in num_elements_combinations_dict.keys():
+		combinations_array += num_elements_combinations_dict[key]
+	return combinations_array
 
+func calculate_num_elem_combinations_dict(max_num_elements_arg:int)->Dictionary:
+	#Devuelve diccionario, de array de diccionarios. Algo como:
+	#{1,[{candy:1, chocolate:0}, 
+		#{candy:0, chocolate:1}]},
+	#{2,[{candy:2, chocolate:0}, 
+		#{candy:1, chocolate:1}, 
+		#{candy:0, chocolate:2}]},
+	#{3,[{candy:3, chocolate:0}, 
+		#{candy:2, chocolate:1}, 
+		#{candy:1, chocolate:2}, 
+		#{candy:0, chocolate:3}]}
 	var combination_dict = Dictionary()
 	for num_elem in range(1,max_num_elements_arg+1):
 		var combination_list_of_exact_number_of_elements = calculate_combinations_exact_num_of_elem(num_elem,self._products)
 		combination_dict[num_elem] = combination_list_of_exact_number_of_elements;
+		assert(typeof(num_elem)==TYPE_INT)
+		assert(typeof(combination_list_of_exact_number_of_elements) == TYPE_ARRAY)
 	
 	return combination_dict
 
 func calculate_combinations_exact_num_of_elem(exact_num_elements_arg:int, list_of_prod:Array)->Array:
+	#Devuelve Array de dictionaries
 	#[{candy:3, chocolate:0}, {candy:2, chocolate:1}, {candy:1, chocolate:2}, {candy:0, chocolate:3}]
 
 	var combination_list = Array()

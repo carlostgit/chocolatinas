@@ -5,7 +5,7 @@ class_name CombinationItemList
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-var _dibujo:Texture = load("res://icon.png")
+var _dibujo_default:Texture = load("res://icon.png")
 var _candy:Texture = load("res://candy.png")
 var _chocolate:Texture = load("res://chocolate.png")
 
@@ -34,11 +34,17 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
-func _init(canvas_item_arg:CanvasItem, combinations_arg:Array):
+func _init(canvas_item_arg:CanvasItem, combinations_arg:Array, satisfaction_combination_arg:Dictionary = Dictionary()):
 	_canvas_item = canvas_item_arg
 	_combinations = combinations_arg
-	for dict in _combinations:		
+	
+	for dict in _combinations:
+		assert(typeof(dict)==TYPE_DICTIONARY)
 		add_item_list(dict)
+	
+#	if (satisfaction_combination.size()>0):
+#		todo
+
 	
 func add_item_list(dict_arg:Dictionary):
 	
@@ -53,6 +59,9 @@ func add_item_list(dict_arg:Dictionary):
 			icon = _chocolate
 		elif (product == "candy"):
 			icon = _candy
+		else:
+			icon = _dibujo_default
+			assert(false)
 		for pro in num_current_prod:
 			#total_height += icon.get_size().y+6 
 			item_list.add_icon_item(icon)
