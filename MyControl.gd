@@ -1,7 +1,7 @@
 extends Control
 
 
-var _font = load("res://new_dynamicfont.tres")
+
 var _satisf_plotter = load("res://SatisfPlotter.gd")
 #var _combination_item_list = load("res://CombinationItemList.gd")
 
@@ -30,7 +30,7 @@ var _param_combo_maximum_quantity_satisf = {"sweets":3.0}
 # Called when the node enters the scene tree for the first time.
 func _ready():
 
-	_satisf_plotter = SatisfPlotter.new(400, 10, 6,40.0,5.0,100, self, _font)
+	_satisf_plotter = SatisfPlotter.new(400, 10, 6,40.0,5.0,100, self)
 	#satisf_plotter.draw_background()
 
 	print ("Satisf = "+ String(calculate_satisf()))
@@ -39,17 +39,17 @@ func _ready():
 	#var num_elem_combination_dict = calculate_combinations(3)
 	var combinations = calculate_combinations(3)
 
-
+	var combination_satisfaction:Dictionary = get_combination_satisfaction_dict(combinations)
 	
-	var satisfaction_combination_array:Array = get_satisfaction_combination_ordered_array_from_combinations(combinations)
-
+	var satisfaction_combination_array:Array = get_satisfaction_combination_ordered_array(combination_satisfaction)
+	
 	var ordered_array_of_comb:Array = Array()
 	for satisfaction_combination in satisfaction_combination_array:
 		print(satisfaction_combination)
 		print (satisfaction_combination.keys()[0])
 		ordered_array_of_comb.append(satisfaction_combination[satisfaction_combination.keys()[0]])
 
-	var item2 = CombinationItemList.new(self,ordered_array_of_comb)
+	var item2 = CombinationItemList.new(self,ordered_array_of_comb,combination_satisfaction)
 	item2.set_position(Vector2(20,80))
 	add_child(item2)
 	
@@ -67,7 +67,18 @@ func _process(delta):
 	self.update()
 	#pass
 
-func get_satisfaction_combination_ordered_array_from_combinations(combinations:Array) -> Array:
+func get_satisfaction_combination_ordered_array(combination_satisfaction_arg:Dictionary) -> Array:
+	var satisfaction_combination_array:Array = Array()
+	for combination in combination_satisfaction_arg.keys():
+		var satisf_combi_pair:Dictionary = Dictionary()
+		var satisf = combination_satisfaction_arg[combination]
+		satisf_combi_pair[satisf] = combination
+		satisfaction_combination_array.append(satisf_combi_pair)
+	
+	satisfaction_combination_array.sort_custom(MyCustomSorter, "sort")
+	return satisfaction_combination_array
+
+func get_combination_satisfaction_dict(combinations:Array) -> Dictionary:
 
 	var combination_satisfaction_dict:Dictionary = Dictionary()
 	var satisfaction_combination_array:Array = Array()
@@ -80,9 +91,10 @@ func get_satisfaction_combination_ordered_array_from_combinations(combinations:A
 		satisf_combi_pair[satisfaction] = combination
 		satisfaction_combination_array.append(satisf_combi_pair)
 
-	satisfaction_combination_array.sort_custom(MyCustomSorter, "sort")
-	
-	return satisfaction_combination_array
+	return combination_satisfaction_dict
+#	satisfaction_combination_array.sort_custom(MyCustomSorter, "sort")
+#
+#	return satisfaction_combination_array
 
 func calculate_satisf() -> float:
 	var satisfaction_return = 0.0
