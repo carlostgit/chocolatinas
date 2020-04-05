@@ -13,9 +13,13 @@ var _chocolate:Texture = load("res://chocolate.png")
 # Declare member variables here. Examples:
 #var _persons = ["Pepe", "Paco"]
 var _products = ["chocolate","candy"]
+var _combination_to_highlight = {"chocolate": 2, "candy": 1}
+#todo
 #var _combination_1:Dictionary = {"chocolate": 2, "candy": 2}
 #var _combination_2:Dictionary = {"chocolate": 3, "candy": 4}
 #var _combinations:Array = [_combination_1,_combination_2]
+
+var _utils = load("res://Utils.gd")
 
 var _combinations:Array = Array()
 
@@ -25,6 +29,7 @@ var _canvas_item:CanvasItem = null
 #var _item_list_array = Array()
 #var _item_list:ItemList = ItemList.new()
 var _item_lists:Array = Array()
+var _combination_item_list:Dictionary = Dictionary()
 
 var _scale:float = 0.5
 var _fixed_icon_size:Vector2 = Vector2(50,50)
@@ -40,18 +45,67 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
-func _init(canvas_item_arg:CanvasItem, combinations_arg:Array, combination_satisfaction_arg:Dictionary = Dictionary()):
+#func _init(canvas_item_arg:CanvasItem, combinations_arg:Array, combination_satisfaction_arg:Dictionary = Dictionary()):
+func _init(canvas_item_arg:CanvasItem, combination_satisfaction_arg:Dictionary = Dictionary()):
 	_canvas_item = canvas_item_arg
-	_combinations = combinations_arg
+	#_combinations = combinations_arg
 	_combination_satisfaction = combination_satisfaction_arg
+	
+	_combinations = get_ordered_combinations(combination_satisfaction_arg)
 	
 	for combination in _combinations:
 		assert(typeof(combination)==TYPE_DICTIONARY)
 		add_item_list(combination)
 	
+	highlight_combination(_combination_to_highlight)
 #	if (satisfaction_combination.size()>0):
 #		todo
+
+func highlight_combination(_combination_to_highlight:Dictionary)->void:
 	
+	for combination in _combination_item_list:
+		print ("Ini")
+		print (combination)
+		print (_combination_to_highlight)
+		print ("Fin")
+		
+		#Lo siguiente no funciona para comparar Dictionaries en gdscript
+		#if(combination==_combination_to_highlight):
+		#Lo siguiente tampoco:
+		#if(combination.hash()==_combination_to_highlight.hash()):
+		
+		#	_combination_item_list[combination].set_item_custom_bg_color(0,Color(1,0,0))
+		
+		
+		
+		if Utils.compare_dictionaries(combination,_combination_to_highlight):
+			#print ("print hashes")
+			#print (combination.hash())
+			#print (_combination_to_highlight.hash())
+			var item_list:ItemList = _combination_item_list[combination]
+			item_list.set_item_custom_bg_color(0,Color(1,0,0))
+			
+			print("combination found")
+	#_combination_item_list[_combination_to_highlight]
+	#var item_list:ItemList = _combination_item_list[_combination_to_highlight]
+	#item_list.set_item_custom_bg_color(0,Color(1,0,0))
+	pass
+
+func get_ordered_combinations(combination_satisfaction_arg:Dictionary) -> Array:
+	#Se ordenano de menor a mayor satisfacción
+	
+	var satisfactions_ordered:Array = combination_satisfaction_arg.values()
+	satisfactions_ordered.sort()
+	
+	var combinations_ordered:Array = Array()
+	for satisfaction in satisfactions_ordered:
+		for combination in combination_satisfaction_arg:
+			if satisfaction == combination_satisfaction_arg[combination]:
+				combinations_ordered.append(combination)
+				break	
+	assert(combination_satisfaction_arg.size()==combinations_ordered.size())
+	
+	return combinations_ordered
 	
 func add_item_list(combination_dict_arg:Dictionary):
 	
@@ -93,6 +147,7 @@ func add_item_list(combination_dict_arg:Dictionary):
 	self.add_child(item_list)
 	
 	_item_lists.append(item_list)
+	_combination_item_list[combination_dict_arg]=item_list
 	
 	var label_node:Label = Label.new()
 	
@@ -113,3 +168,18 @@ func add_item_list(combination_dict_arg:Dictionary):
 	#self.draw_string(_font, this_item_list_pos,String(52),Color(1,1,1))
 	
 	pass
+
+
+#static func compare_dictionaries(dict_1:Dictionary,dict_2:Dictionary)-> bool:
+#	#Este método casero es necesario, porque en la versión de gdscript actual
+#	#no funciona bien la comparación (operador==) entre objetos Dictionary
+#	if(dict_1.size()!=dict_2.size()):
+#		return false
+#
+#	for key in dict_1.keys():
+#		if false==dict_2.has(key):
+#			return false
+#		if dict_1[key] != dict_2[key]:
+#			return false
+#
+#	return true

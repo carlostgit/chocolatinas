@@ -41,15 +41,17 @@ func _ready():
 
 	var combination_satisfaction:Dictionary = get_combination_satisfaction_dict(combinations)
 	
-	var satisfaction_combination_array:Array = get_satisfaction_combination_ordered_array(combination_satisfaction)
-	
-	var ordered_array_of_comb:Array = Array()
-	for satisfaction_combination in satisfaction_combination_array:
-		print(satisfaction_combination)
-		print (satisfaction_combination.keys()[0])
-		ordered_array_of_comb.append(satisfaction_combination[satisfaction_combination.keys()[0]])
+#	var satisfaction_combination_array:Array = get_satisfaction_combination_ordered_array(combination_satisfaction)
+#
+#	var ordered_array_of_comb:Array = Array()
+#	for satisfaction_combination in satisfaction_combination_array:
+#		print(satisfaction_combination)
+#		print (satisfaction_combination.keys()[0])
+#		ordered_array_of_comb.append(satisfaction_combination[satisfaction_combination.keys()[0]])
 
-	var item2 = CombinationItemList.new(self,ordered_array_of_comb,combination_satisfaction)
+#	var item2 = CombinationItemList.new(self,ordered_array_of_comb,combination_satisfaction)
+
+	var item2 = CombinationItemList.new(self,combination_satisfaction)
 	item2.set_position(Vector2(20,80))
 	add_child(item2)
 	
