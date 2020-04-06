@@ -17,7 +17,7 @@ var _products = ["chocolate","candy"]
 var _production = {"chocolate": 2, "candy": 2}
 #var _productionPepe = {"chocolate": 2, "candy": 2}
 #var _productionPaco = {"chocolate": 1, "candy": 3}
-
+var _combination_item_list:CombinationItemList = null
 
 var _param_preference_at_0 = {"chocolate": 4.5, "candy": 4.5}
 
@@ -51,9 +51,9 @@ func _ready():
 
 #	var item2 = CombinationItemList.new(self,ordered_array_of_comb,combination_satisfaction)
 
-	var item2 = CombinationItemList.new(self,combination_satisfaction)
-	item2.set_position(Vector2(20,80))
-	add_child(item2)
+	_combination_item_list = CombinationItemList.new(self,combination_satisfaction)
+	_combination_item_list.set_position(Vector2(20,80))
+	add_child(_combination_item_list)
 	
 	#var button:Button = Button.new()
 	#button.set_position(Vector2(50,50))
@@ -315,3 +315,13 @@ class MyCustomSorter:
 		else:
 			return false
 			
+
+func _on_MyButton_pressed():
+	print ("Button pressed conected to MyControl.gd")
+	_combination_item_list.highlight_combination({"chocolate": 1, "candy": 1})
+	
+	#_combination_item_list.highlight_combinations_with_more_satisf(4.0)	
+	
+	#_combination_item_list.highlight_combinations_with_less_satisf(2.0)
+	
+	pass # Replace with function body.

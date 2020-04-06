@@ -20,6 +20,7 @@ var _combination_to_highlight = {"chocolate": 2, "candy": 1}
 #var _combinations:Array = [_combination_1,_combination_2]
 
 var _utils = load("res://Utils.gd")
+#var _MyDictionary = load("res://MyDictionary.gd")
 
 var _combinations:Array = Array()
 
@@ -60,36 +61,14 @@ func _init(canvas_item_arg:CanvasItem, combination_satisfaction_arg:Dictionary =
 	highlight_combination(_combination_to_highlight)
 #	if (satisfaction_combination.size()>0):
 #		todo
+	#var my_dict:MyDictionary = _MyDictionary.new(_combination_item_list)
 
 func highlight_combination(_combination_to_highlight:Dictionary)->void:
 	
-	for combination in _combination_item_list:
-		print ("Ini")
-		print (combination)
-		print (_combination_to_highlight)
-		print ("Fin")
-		
-		#Lo siguiente no funciona para comparar Dictionaries en gdscript
-		#if(combination==_combination_to_highlight):
-		#Lo siguiente tampoco:
-		#if(combination.hash()==_combination_to_highlight.hash()):
-		
-		#	_combination_item_list[combination].set_item_custom_bg_color(0,Color(1,0,0))
-		
-		
-		
-		if Utils.compare_dictionaries(combination,_combination_to_highlight):
-			#print ("print hashes")
-			#print (combination.hash())
-			#print (_combination_to_highlight.hash())
-			var item_list:ItemList = _combination_item_list[combination]
-			item_list.set_item_custom_bg_color(0,Color(1,0,0))
-			
-			print("combination found")
-	#_combination_item_list[_combination_to_highlight]
-	#var item_list:ItemList = _combination_item_list[_combination_to_highlight]
-	#item_list.set_item_custom_bg_color(0,Color(1,0,0))
-	pass
+	var item_list:ItemList = Utils.find_value_in_dictionary_with_dictionary_key(_combination_item_list,_combination_to_highlight)
+	item_list.set_item_custom_bg_color(0,Color(0,1,0))
+	item_list.update() #para que se repinte
+	print ("changing background color")
 
 func get_ordered_combinations(combination_satisfaction_arg:Dictionary) -> Array:
 	#Se ordenano de menor a mayor satisfacción
@@ -104,7 +83,7 @@ func get_ordered_combinations(combination_satisfaction_arg:Dictionary) -> Array:
 				combinations_ordered.append(combination)
 				break	
 	assert(combination_satisfaction_arg.size()==combinations_ordered.size())
-	
+
 	return combinations_ordered
 	
 func add_item_list(combination_dict_arg:Dictionary):
@@ -169,7 +148,15 @@ func add_item_list(combination_dict_arg:Dictionary):
 	
 	pass
 
+func get_combinations_with_less_satisfaction(satisfaction_arg:float) -> Array:	
+	var combinations_with_less:Array = Array()
+	for combination in _combinations:
+		var satisf:float = Utils.find_value_in_dictionary_with_dictionary_key(_combination_satisfaction,combination)	
+		if satisf<satisfaction_arg:
+			break
+		combinations_with_less.append(combination)
 
+	return combinations_with_less
 #static func compare_dictionaries(dict_1:Dictionary,dict_2:Dictionary)-> bool:
 #	#Este método casero es necesario, porque en la versión de gdscript actual
 #	#no funciona bien la comparación (operador==) entre objetos Dictionary

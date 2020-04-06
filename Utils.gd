@@ -27,3 +27,13 @@ static func compare_dictionaries(dict_1:Dictionary,dict_2:Dictionary)-> bool:
 			return false
 		
 	return true
+	
+static func find_value_in_dictionary_with_dictionary_key(dict_with_dictionary_key_arg:Dictionary,dict_key_arg:Dictionary):
+	#Este método casero es necesario, porque en la versión de gdscript actual
+	#no funciona bien la comparación (operador==) entre objetos Dictionary
+		
+	for dictionary_key in dict_with_dictionary_key_arg:
+		if compare_dictionaries(dictionary_key, dict_key_arg):
+			return dict_with_dictionary_key_arg[dictionary_key]
+	
+	return null
