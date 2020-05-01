@@ -19,6 +19,8 @@ var _production = {"chocolate": 2, "candy": 2}
 #var _productionPaco = {"chocolate": 1, "candy": 3}
 var _combination_item_list:CombinationItemList = null
 
+var _combination_item_list_2:CombinationItemList = null
+
 var _param_preference_at_0 = {"chocolate": 4.5, "candy": 4.5}
 
 var _maximum_satisf = {"chocolate": 9.0, "candy": 4.0}
@@ -51,9 +53,19 @@ func _ready():
 
 #	var item2 = CombinationItemList.new(self,ordered_array_of_comb,combination_satisfaction)
 
-	_combination_item_list = CombinationItemList.new(self,combination_satisfaction)
+	_combination_item_list = CombinationItemList.new(self,combination_satisfaction,"Paco Porras")
+	_combination_item_list.set_selected_combination({"chocolate": 3, "candy": 0})
+	#_combination_item_list.set_name("Paco porras")
 	_combination_item_list.set_position(Vector2(20,80))
 	add_child(_combination_item_list)
+	
+	_combination_item_list_2 = CombinationItemList.new(self,combination_satisfaction, "Pepa Pipas")
+	_combination_item_list_2.set_selected_combination({"chocolate": 1, "candy": 2})
+	#_combination_item_list_2.set_name("Pepa pipas")
+	_combination_item_list_2.set_position(Vector2(300,80))
+	add_child(_combination_item_list_2)
+	
+	
 	
 	#var button:Button = Button.new()
 	#button.set_position(Vector2(50,50))
@@ -318,10 +330,14 @@ class MyCustomSorter:
 
 func _on_MyButton_pressed():
 	print ("Button pressed conected to MyControl.gd")
-	_combination_item_list.highlight_combination({"chocolate": 1, "candy": 1})
+	#_combination_item_list.highlight_combination({"chocolate": 1, "candy": 1})
 	
-	#_combination_item_list.highlight_combinations_with_more_satisf(4.0)	
+	var satisf:float = _combination_item_list.get_satisfaction_of_selected_combination()
+	print ("satisf = " + String(satisf))
+	_combination_item_list.highlight_combinations_with_more_satisf(satisf)	
 	
-	#_combination_item_list.highlight_combinations_with_less_satisf(2.0)
+	_combination_item_list.highlight_combinations_with_less_satisf(satisf)
+	
+	_combination_item_list.highlight_selected_combination()
 	
 	pass # Replace with function body.
