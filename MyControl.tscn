@@ -31,5 +31,5 @@ custom_constants/line_spacing = 8
 custom_constants/shadow_offset_y = 4
 custom_constants/shadow_as_outline = 3
 text = "Prueba Label"
-[connection signal="pressed" from="MyButton" to="MyButton" method="_on_MyButton_pressed"]
 [connection signal="pressed" from="MyButton" to="." method="_on_MyButton_pressed"]
+[connection signal="pressed" from="MyButton" to="MyButton" method="_on_MyButton_pressed"]

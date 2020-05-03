@@ -14,6 +14,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://CombinationItemList.gd"
 }, {
+"base": "Control",
+"class": "Market",
+"language": "GDScript",
+"path": "res://Market.gd"
+}, {
+"base": "Control",
+"class": "Participant",
+"language": "GDScript",
+"path": "res://Participant.gd"
+}, {
 "base": "Node",
 "class": "SatisfPlotter",
 "language": "GDScript",
@@ -26,6 +36,8 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "CombinationItemList": "",
+"Market": "",
+"Participant": "",
 "SatisfPlotter": "",
 "Utils": ""
 }
