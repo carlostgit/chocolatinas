@@ -115,12 +115,13 @@ func get_ordered_combinations(combination_satisfaction_arg:Dictionary) -> Array:
 	
 	var satisfactions_ordered:Array = combination_satisfaction_arg.values()
 	satisfactions_ordered.sort()
-	
+	var combi_satisf_left = combination_satisfaction_arg.duplicate(true) #copia
 	var combinations_ordered:Array = Array()
 	for satisfaction in satisfactions_ordered:
-		for combination in combination_satisfaction_arg:
-			if satisfaction == combination_satisfaction_arg[combination]:
+		for combination in combi_satisf_left:
+			if satisfaction == combi_satisf_left[combination]:
 				combinations_ordered.append(combination)
+				combi_satisf_left.erase(combination)
 				break	
 	assert(combination_satisfaction_arg.size()==combinations_ordered.size())
 
@@ -145,6 +146,7 @@ func add_item_list(combination_dict_arg:Dictionary):
 		for pro in num_current_prod:
 			#total_height += icon.get_size().y+6 
 			item_list.add_icon_item(icon)
+			#item_list.add_item("bla blaldjaf")
 			num_prod = num_prod + 1
 
 	var parent_x_pos = self.get_position().x

@@ -40,6 +40,8 @@ var _font = load("res://new_dynamicfont.tres")
 
 var _my_combination_item_list:CombinationItemList = null
 
+var _selected_combination = {"chocolate": 1, "candy": 1}
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#self.set_size(Vector2(40,40))
@@ -55,8 +57,12 @@ func _init(canvas_item_arg:CanvasItem, combination_satisfaction_arg:Dictionary =
 	set_name(name_arg)
 	_canvas_item = canvas_item_arg
 	_my_combination_item_list = CombinationItemList.new(canvas_item_arg, combination_satisfaction_arg,name_arg)
-	_my_combination_item_list.set_position(Vector2(20,80))
+	_my_combination_item_list.set_position(Vector2(0,90))
 	add_child(_my_combination_item_list)
+	
+	var selected_combi_list = CombinationItem.new( canvas_item_arg, _selected_combination, "selected", 0)
+	selected_combi_list.set_position(Vector2(120,00))
+	add_child(selected_combi_list)
 
 func set_name(name_arg:String)->void:
 	
