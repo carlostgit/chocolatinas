@@ -31,6 +31,8 @@ var _canvas_item:CanvasItem = null
 #var _item_list_array = Array()
 #var _item_list:ItemList = ItemList.new()
 var _item_lists:Array = Array()
+var _combination_items:Array = Array()
+
 var _combination_item_list:Dictionary = Dictionary()
 
 var _scale:float = 0.5
@@ -129,63 +131,81 @@ func get_ordered_combinations(combination_satisfaction_arg:Dictionary) -> Array:
 	
 func add_item_list(combination_dict_arg:Dictionary):
 	
-	var item_list:ItemList = ItemList.new()
-	var num_prod=0
-	#var total_height = 0
-	for product in combination_dict_arg.keys():
-		var num_current_prod = combination_dict_arg[product]
-		
-		var icon =null
-		if(product == "chocolate"):
-			icon = _chocolate
-		elif (product == "candy"):
-			icon = _candy
-		else:
-			icon = _dibujo_default
-			assert(false)
-		for pro in num_current_prod:
-			#total_height += icon.get_size().y+6 
-			item_list.add_icon_item(icon)
-			#item_list.add_item("bla blaldjaf")
-			num_prod = num_prod + 1
-
-	var parent_x_pos = self.get_position().x
-	var parent_y_pos = self.get_position().y
-	
-	#item_list.set_size(_chocolate.get_size())
-	item_list.set_size(_fixed_icon_size*_scale)
-	item_list.set_fixed_icon_size(_fixed_icon_size)
-	var current_position_x = self.get_position().x+_item_lists.size()*item_list.get_size().x
-	var this_item_list_pos=Vector2(current_position_x,self.get_position().y+50)
-	item_list.set_position(this_item_list_pos)
-	item_list.set_auto_height(true)
-	#item_list.set_fixed_column_width(_fixed_icon_size.x*0.3)
-	
-	item_list.set_icon_scale(_scale)
-
-	#item_list.set_icon_scale(0.3)
-
-	self.add_child(item_list)
-	
-	_item_lists.append(item_list)
-	_combination_item_list[combination_dict_arg]=item_list
-	
-	var label_node:Label = Label.new()
-	
-	
+	#Prueba
+	#Inicio prueba de poner combinationItem en vez de itemlist + label
+	#if true:
 	var satisf:float = 0
 	if(_combination_satisfaction.size()>0):
 		satisf = _combination_satisfaction[combination_dict_arg]
+	var combination_item:CombinationItem = CombinationItem.new(_canvas_item, combination_dict_arg, "", String(satisf).pad_decimals(1))
+	var item_width:float = combination_item.get_width()
+	var current_position_x = self.get_position().x+_combination_items.size()*item_width
+	var this_item_list_pos=Vector2(current_position_x,self.get_position().y+20)
+	combination_item.set_position(this_item_list_pos)
+	self._combination_items.append(combination_item)
+	self.add_child(combination_item)
 	
+		
+		
+	#Fin prueba
 	
-	label_node.set_text(String(satisf).pad_decimals(1))
-	
-	label_node.set_position(this_item_list_pos)
-
-	label_node.set_rotation(-PI/2);
-	
-	self.add_child(label_node)
-	
+#	var item_list:ItemList = ItemList.new()
+#	var num_prod=0
+#	#var total_height = 0
+#	for product in combination_dict_arg.keys():
+#		var num_current_prod = combination_dict_arg[product]
+#
+#		var icon =null
+#		if(product == "chocolate"):
+#			icon = _chocolate
+#		elif (product == "candy"):
+#			icon = _candy
+#		else:
+#			icon = _dibujo_default
+#			assert(false)
+#		for pro in num_current_prod:
+#			#total_height += icon.get_size().y+6 
+#			item_list.add_icon_item(icon)
+#			#item_list.add_item("bla blaldjaf")
+#			num_prod = num_prod + 1
+#
+#	var parent_x_pos = self.get_position().x
+#	var parent_y_pos = self.get_position().y
+#
+#	#item_list.set_size(_chocolate.get_size())
+#	item_list.set_size(_fixed_icon_size*_scale)
+#	item_list.set_fixed_icon_size(_fixed_icon_size)
+#	var current_position_x = self.get_position().x+_item_lists.size()*item_list.get_size().x
+#	var this_item_list_pos=Vector2(current_position_x,self.get_position().y+80)
+#	item_list.set_position(this_item_list_pos)
+#	item_list.set_auto_height(true)
+#	#item_list.set_fixed_column_width(_fixed_icon_size.x*0.3)
+#
+#	item_list.set_icon_scale(_scale)
+#
+#	#item_list.set_icon_scale(0.3)
+#
+#	self.add_child(item_list)
+#
+#	_item_lists.append(item_list)
+#	_combination_item_list[combination_dict_arg]=item_list
+#
+#	var label_node:Label = Label.new()
+#
+#
+#	var satisf:float = 0
+#	if(_combination_satisfaction.size()>0):
+#		satisf = _combination_satisfaction[combination_dict_arg]
+#
+#
+#	label_node.set_text(String(satisf).pad_decimals(1))
+#
+#	label_node.set_position(this_item_list_pos)
+#
+#	label_node.set_rotation(-PI/2);
+#
+#	self.add_child(label_node)
+#
 	#self.draw_string(_font, this_item_list_pos,String(52),Color(1,1,1))
 	
 	pass

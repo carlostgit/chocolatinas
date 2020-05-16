@@ -28,7 +28,7 @@ func _ready():
 #func _process(delta):
 #	pass
 
-func _init(canvas_item_arg:CanvasItem, combination_value_arg:Dictionary = Dictionary(),name_arg:String = "no name", value_arg:float = 0):
+func _init(canvas_item_arg:CanvasItem, combination_value_arg:Dictionary = Dictionary(),label_arg:String = "", value_arg:String = ""):
 	_canvas_item = canvas_item_arg
 	
 	#TODO
@@ -59,7 +59,7 @@ func _init(canvas_item_arg:CanvasItem, combination_value_arg:Dictionary = Dictio
 #	prices_list.set_position(Vector2(0,40))
 #	#fin Prueba
 
-	self.set_label(name_arg)
+	self.set_label(label_arg)
 	
 func set_label(label_name_arg:String)->void:
 	print("label_name is")
@@ -73,7 +73,7 @@ func set_label(label_name_arg:String)->void:
 
 	self.add_child(label_name)
 	
-func add_item_list(combination_dict_arg:Dictionary, value_arg:float):
+func add_item_list(combination_dict_arg:Dictionary, label_arg:String):
 	
 	var item_list:ItemList = ItemList.new()
 	var num_prod=0
@@ -124,7 +124,7 @@ func add_item_list(combination_dict_arg:Dictionary, value_arg:float):
 	#	satisf = _combination_satisfaction[combination_dict_arg]
 	
 	
-	label_node.set_text(String(value_arg).pad_decimals(1))
+	label_node.set_text(label_arg)
 	
 	label_node.set_position(this_item_list_pos)
 
@@ -135,3 +135,6 @@ func add_item_list(combination_dict_arg:Dictionary, value_arg:float):
 	#self.draw_string(_font, this_item_list_pos,String(52),Color(1,1,1))
 	
 	pass
+
+func get_width() -> float:
+	return _fixed_icon_size.x*_scale

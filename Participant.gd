@@ -60,7 +60,9 @@ func _init(canvas_item_arg:CanvasItem, combination_satisfaction_arg:Dictionary =
 	_my_combination_item_list.set_position(Vector2(0,90))
 	add_child(_my_combination_item_list)
 	
-	var selected_combi_list = CombinationItem.new( canvas_item_arg, _selected_combination, "selected", 0)
+	var value:float = 0;
+	var value_string:String = String(value).pad_decimals(1)
+	var selected_combi_list = CombinationItem.new( canvas_item_arg, _selected_combination, "selected", value_string)
 	selected_combi_list.set_position(Vector2(120,00))
 	add_child(selected_combi_list)
 
