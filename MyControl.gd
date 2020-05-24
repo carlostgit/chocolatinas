@@ -56,19 +56,23 @@ func _ready():
 
 #	var item2 = CombinationItemList.new(self,ordered_array_of_comb,combination_satisfaction)
 
-	_combination_item_list = Participant.new(self,combination_satisfaction,"Paco Porras")
+	_market = Market.new(self,combinations)
+	_market.set_position(Vector2(600,80))
+	add_child(_market)	
+	
+
+	_combination_item_list = Participant.new(self,_market,combination_satisfaction,"Paco Porras")
 	_combination_item_list.set_selected_combination({"chocolate": 3, "candy": 0})
 	_combination_item_list.set_position(Vector2(20,80))
 	add_child(_combination_item_list)
 
-	_combination_item_list_2 = Participant.new(self,combination_satisfaction, "Pepa Pipas")
+	_combination_item_list_2 = Participant.new(self,_market, combination_satisfaction, "Pepa Pipas")
 	_combination_item_list_2.set_selected_combination({"chocolate": 1, "candy": 2})
 	_combination_item_list_2.set_position(Vector2(300,80))
 	add_child(_combination_item_list_2)
 	
-	_market = Market.new(self,combinations)
-	_market.set_position(Vector2(600,80))
-	add_child(_market)	
+	
+	
 	
 	#var button:Button = Button.new()
 	#button.set_position(Vector2(50,50))

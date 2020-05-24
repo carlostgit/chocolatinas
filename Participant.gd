@@ -41,7 +41,9 @@ var _font = load("res://new_dynamicfont.tres")
 var _my_combination_item_list:CombinationItemList = null
 
 var _selected_combination = {"chocolate": 1, "candy": 1}
+var _combination_satisfaction:Dictionary = Dictionary()
 
+var _market:Market = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#self.set_size(Vector2(40,40))
@@ -52,17 +54,30 @@ func _ready():
 #func _process(delta):
 #	pass
 #func _init(canvas_item_arg:CanvasItem, combinations_arg:Array, combination_satisfaction_arg:Dictionary = Dictionary()):
-func _init(canvas_item_arg:CanvasItem, combination_satisfaction_arg:Dictionary = Dictionary(),name_arg:String = "no name"):
+func _init(canvas_item_arg:CanvasItem, market_arg:Market, combination_satisfaction_arg:Dictionary = Dictionary(),name_arg:String = "no name"):
 	
 	set_name(name_arg)
 	_canvas_item = canvas_item_arg
-	_my_combination_item_list = CombinationItemList.new(canvas_item_arg, combination_satisfaction_arg,name_arg)
+	
+	_combination_satisfaction = combination_satisfaction_arg
+	
+	_market = market_arg
+	
+#	var labels:Array = []
+#	labels.append("Satisfaction")
+#	labels.append("Value")
+	var combination_price = Dictionary()
+	combination_price = get_combination_price()
+	var combinations_ordered:Array = Utils.get_ordered_combinations(combination_satisfaction_arg)
+	_my_combination_item_list = CombinationItemList.new(canvas_item_arg, combinations_ordered, combination_satisfaction_arg, combination_price,name_arg)
 	_my_combination_item_list.set_position(Vector2(0,90))
 	add_child(_my_combination_item_list)
 	
 	var value:float = 0;
 	var value_string:String = String(value).pad_decimals(1)
-	var selected_combi_list = CombinationItem.new( canvas_item_arg, _selected_combination, "selected", value_string)
+	var labels_array = Array()
+	#labels_array.append(value_string)
+	var selected_combi_list = CombinationItem.new( canvas_item_arg, _selected_combination, "selected", labels_array)
 	selected_combi_list.set_position(Vector2(120,00))
 	add_child(selected_combi_list)
 
@@ -240,3 +255,19 @@ func highlight_selected_combination() -> void:
 ##			return false
 ##
 ##	return true
+
+#func set_market(market_arg:Market) ->void:
+#	_market = market_arg
+#	todo. tengo q pasar esto en el constructor. si no es demasiado tarde
+	
+func get_combination_price() -> Dictionary:
+	if _market:
+		var combination_price:Dictionary = Dictionary()
+		for combination in self._combination_satisfaction.keys():
+			var price:float = _market.get_price_of_combi(combination)
+			combination_price[combination] = price
+		return combination_price
+	else:
+		return Dictionary()
+		
+		

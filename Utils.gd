@@ -37,3 +37,20 @@ static func find_value_in_dictionary_with_dictionary_key(dict_with_dictionary_ke
 			return dict_with_dictionary_key_arg[dictionary_key]
 	
 	return null
+	
+static func get_ordered_combinations(combination_satisfaction_arg:Dictionary) -> Array:
+	#Se ordenano de menor a mayor satisfacción
+	
+	var satisfactions_ordered:Array = combination_satisfaction_arg.values()
+	satisfactions_ordered.sort()
+	var combi_satisf_left = combination_satisfaction_arg.duplicate(true) #copia
+	var combinations_ordered:Array = Array()
+	for satisfaction in satisfactions_ordered:
+		for combination in combi_satisf_left:
+			if satisfaction == combi_satisf_left[combination]:
+				combinations_ordered.append(combination)
+				combi_satisf_left.erase(combination)
+				break	
+	assert(combination_satisfaction_arg.size()==combinations_ordered.size())
+
+	return combinations_ordered

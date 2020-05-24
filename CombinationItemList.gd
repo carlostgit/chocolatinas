@@ -26,11 +26,12 @@ var _utils = load("res://Utils.gd")
 
 var _combinations:Array = Array()
 var _combination_satisfaction:Dictionary = Dictionary()
+var _combination_price:Dictionary = Dictionary()
 
 var _canvas_item:CanvasItem = null
 #var _item_list_array = Array()
 #var _item_list:ItemList = ItemList.new()
-var _item_lists:Array = Array()
+#var _item_lists:Array = Array()
 var _combination_items:Array = Array()
 
 var _combination_item_list:Dictionary = Dictionary()
@@ -50,12 +51,14 @@ func _ready():
 #func _process(delta):
 #	pass
 #func _init(canvas_item_arg:CanvasItem, combinations_arg:Array, combination_satisfaction_arg:Dictionary = Dictionary()):
-func _init(canvas_item_arg:CanvasItem, combination_satisfaction_arg:Dictionary = Dictionary(),name_arg:String = "no name"):
+func _init(canvas_item_arg:CanvasItem, combinations_arg:Array = Array(), combination_satisfaction_arg:Dictionary = Dictionary(),combination_price_arg:Dictionary = Dictionary(),name_arg:String = "no name"):
 	_canvas_item = canvas_item_arg
 	#_combinations = combinations_arg
 	_combination_satisfaction = combination_satisfaction_arg
+	_combination_price = combination_price_arg
 	
-	_combinations = get_ordered_combinations(combination_satisfaction_arg)
+	_combinations = combinations_arg
+	#_combinations = get_ordered_combinations(combination_satisfaction_arg)
 	
 	for combination in _combinations:
 		assert(typeof(combination)==TYPE_DICTIONARY)
@@ -74,6 +77,41 @@ func _init(canvas_item_arg:CanvasItem, combination_satisfaction_arg:Dictionary =
 	print (label_name.get_position())
 	self.add_child(label_name)
 	
+	#Label 2
+	if _combination_items.size()>0:
+		var item_width:float = _combination_items.back().get_width()   #.get_width()
+		var right_end_position_x = self.get_position().x+_combination_items.size()*item_width
+		
+		var label_count = 0
+		var labels:Array =["Satisfaction","Price"]
+		for label in labels:
+			
+			assert(typeof(label)==TYPE_STRING)
+			var satisf_label:Label = Label.new()
+			satisf_label.set_scale(Vector2(1.0,1.0))
+			satisf_label.set_text(label)
+			satisf_label.set("custom_colors/font_color", Color(1,0,0))
+			var satisf_posit = self.get_position()+Vector2(right_end_position_x+20,50-30*label_count)
+			satisf_label.set_position(satisf_posit)
+			self.add_child(satisf_label)
+			label_count += 1
+		
+#		var satisf_label:Label = Label.new()
+#		satisf_label.set_scale(Vector2(1.0,1.0))
+#		satisf_label.set_text("Satisfaction")
+#		satisf_label.set("custom_colors/font_color", Color(1,0,0))
+#		var satisf_posit = self.get_position()+Vector2(right_end_position_x+20,50)
+#		satisf_label.set_position(satisf_posit)
+#		self.add_child(satisf_label)
+#
+#		var value_label:Label = Label.new()
+#		value_label.set_scale(Vector2(1.0,1.0))
+#		value_label.set_text("Value")
+#		value_label.set("custom_colors/font_color", Color(1,0,0))
+#		var value_posit = self.get_position()+Vector2(right_end_position_x+20,20)
+#		value_label.set_position(value_posit)
+#		self.add_child(value_label)		
+#
 	#highlight_combination(_selected_combination)
 #	if (satisfaction_combination.size()>0):
 #		todo
@@ -137,7 +175,16 @@ func add_item_list(combination_dict_arg:Dictionary):
 	var satisf:float = 0
 	if(_combination_satisfaction.size()>0):
 		satisf = _combination_satisfaction[combination_dict_arg]
-	var combination_item:CombinationItem = CombinationItem.new(_canvas_item, combination_dict_arg, "", String(satisf).pad_decimals(1))
+	
+	var price:float = 0
+	if(_combination_price.size()>0):
+		price = _combination_price[combination_dict_arg]
+	
+	
+	var combination_labels:Array = []
+	combination_labels.append(String(satisf).pad_decimals(1))
+	combination_labels.append(String(price).pad_decimals(1))	
+	var combination_item:CombinationItem = CombinationItem.new(_canvas_item, combination_dict_arg, "", combination_labels)
 	var item_width:float = combination_item.get_width()
 	var current_position_x = self.get_position().x+_combination_items.size()*item_width
 	var this_item_list_pos=Vector2(current_position_x,self.get_position().y+20)

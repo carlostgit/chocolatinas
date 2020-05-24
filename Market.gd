@@ -56,7 +56,10 @@ func _init(canvas_item_arg:CanvasItem, combinations_arg:Array):
 	for combination in combinations_arg:
 		combi_prices[combination] = get_price_of_combi(combination)
 	var name_combi:String = "Prices of combis: "
-	var comb_it_list = CombinationItemList.new(canvas_item_arg, combi_prices,name_combi)
+	var labels:Array = []
+	labels.append("Price")
+	var combi_satisfaction_void:Dictionary = Dictionary()
+	var comb_it_list = CombinationItemList.new(canvas_item_arg, combi_prices.keys(), combi_satisfaction_void ,combi_prices,name_combi)
 	comb_it_list.set_position(Vector2(0,180))
 	add_child(comb_it_list)
 		
@@ -88,3 +91,8 @@ func set_label(label_name_arg:String)->void:
 	label_name.set_position(self.get_position()+Vector2(0,0))
 
 	self.add_child(label_name)
+
+func get_price(product_arg:String) -> float:
+	return self._prices.get(product_arg, 0.0)
+	
+	

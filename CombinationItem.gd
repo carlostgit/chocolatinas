@@ -20,6 +20,10 @@ var _products = ["chocolate","candy"]
 var _scale:float = 0.5
 var _fixed_icon_size:Vector2 = Vector2(50,50)
 
+var _arguments:Array = []
+
+var _combination_dict:Dictionary = Dictionary()
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -28,12 +32,15 @@ func _ready():
 #func _process(delta):
 #	pass
 
-func _init(canvas_item_arg:CanvasItem, combination_value_arg:Dictionary = Dictionary(),label_arg:String = "", value_arg:String = ""):
+func _init(canvas_item_arg:CanvasItem, combination_dict_arg:Dictionary = Dictionary(), name_arg:String = "", labels_arg:Array = Array()):
 	_canvas_item = canvas_item_arg
+	
+	
+	_combination_dict = combination_dict_arg
 	
 	#TODO
 	#Dibujar una combinación, con la posibilidad de acompañarla de un valor
-	add_item_list(combination_value_arg, value_arg)
+	add_item_list(combination_dict_arg, labels_arg)
 	#Prueba
 #	var price_elem_height = 30
 #	var total_height = 0.0
@@ -59,7 +66,7 @@ func _init(canvas_item_arg:CanvasItem, combination_value_arg:Dictionary = Dictio
 #	prices_list.set_position(Vector2(0,40))
 #	#fin Prueba
 
-	self.set_label(label_arg)
+	self.set_label(name_arg)
 	
 func set_label(label_name_arg:String)->void:
 	print("label_name is")
@@ -73,7 +80,11 @@ func set_label(label_name_arg:String)->void:
 
 	self.add_child(label_name)
 	
-func add_item_list(combination_dict_arg:Dictionary, label_arg:String):
+func add_item_list(combination_dict_arg:Dictionary, labels_arg:Array):
+	
+	for label in labels_arg:
+		assert(typeof(label)==TYPE_STRING)
+	
 	
 	var item_list:ItemList = ItemList.new()
 	var num_prod=0
@@ -116,25 +127,33 @@ func add_item_list(combination_dict_arg:Dictionary, label_arg:String):
 	#_item_lists.append(item_list)
 	#_combination_item_list[combination_dict_arg]=item_list
 	
-	var label_node:Label = Label.new()
+	var label_count = 0
+	for label in labels_arg:
+	
+		var label_node:Label = Label.new()
 	
 	
 	#var satisf:float = 0
 	#if(_combination_satisfaction.size()>0):
 	#	satisf = _combination_satisfaction[combination_dict_arg]
-	
-	
-	label_node.set_text(label_arg)
-	
-	label_node.set_position(this_item_list_pos)
 
-	label_node.set_rotation(-PI/2);
+		
 	
-	self.add_child(label_node)
+		label_node.set_text(label)
+		
+		label_node.set_position(this_item_list_pos+Vector2(0,-label_count*30))
 	
+		label_node.set_rotation(-PI/2);
+		
+		self.add_child(label_node)
+		
+		label_count += 1
 	#self.draw_string(_font, this_item_list_pos,String(52),Color(1,1,1))
 	
 	pass
 
 func get_width() -> float:
 	return _fixed_icon_size.x*_scale
+	
+func get_combination_dict() -> Dictionary:
+	return self._combination_dict
