@@ -24,6 +24,8 @@ var _arguments:Array = []
 
 var _combination_dict:Dictionary = Dictionary()
 
+var _item_list:ItemList = null
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -41,31 +43,7 @@ func _init(canvas_item_arg:CanvasItem, combination_dict_arg:Dictionary = Diction
 	#TODO
 	#Dibujar una combinación, con la posibilidad de acompañarla de un valor
 	add_item_list(combination_dict_arg, labels_arg)
-	#Prueba
-#	var price_elem_height = 30
-#	var total_height = 0.0
-#	var prices_list = ItemList.new()
-#	for prod in combination_value_arg.keys():
-#		var value_of_prod:float = combination_value_arg[prod]
-#		var price_string:String = String(value_of_prod)
-#		total_height += price_elem_height
-#		var icon = null
-#		if(prod == "chocolate"):
-#			icon = _chocolate
-#		elif (prod == "candy"):
-#			icon = _candy
-#		else:
-#			icon = _dibujo_default
-#			assert(false)
-#
-#		prices_list.add_item(price_string,icon)
-#	prices_list.set_fixed_icon_size(Vector2(30,price_elem_height-10))
-#	prices_list.set_size(Vector2(100,total_height))
-#	#prices_list.add_item("blablalblallallalalallalal")
-#	add_child(prices_list)
-#	prices_list.set_position(Vector2(0,40))
-#	#fin Prueba
-
+	
 	self.set_label(name_arg)
 	
 func set_label(label_name_arg:String)->void:
@@ -109,7 +87,7 @@ func add_item_list(combination_dict_arg:Dictionary, labels_arg:Array):
 	var parent_x_pos = self.get_position().x
 	var parent_y_pos = self.get_position().y
 	
-	#item_list.set_size(_chocolate.get_size())
+	
 	item_list.set_size(_fixed_icon_size*_scale)
 	item_list.set_fixed_icon_size(_fixed_icon_size)
 	var current_position_x = self.get_position().x+item_list.get_size().x
@@ -119,24 +97,16 @@ func add_item_list(combination_dict_arg:Dictionary, labels_arg:Array):
 	#item_list.set_fixed_column_width(_fixed_icon_size.x*0.3)
 	
 	item_list.set_icon_scale(_scale)
-
-	#item_list.set_icon_scale(0.3)
-
-	self.add_child(item_list)
 	
-	#_item_lists.append(item_list)
-	#_combination_item_list[combination_dict_arg]=item_list
+	_item_list = item_list
+	
+	self.add_child(_item_list)
+	
 	
 	var label_count = 0
 	for label in labels_arg:
 	
 		var label_node:Label = Label.new()
-	
-	
-	#var satisf:float = 0
-	#if(_combination_satisfaction.size()>0):
-	#	satisf = _combination_satisfaction[combination_dict_arg]
-
 		
 	
 		label_node.set_text(label)
@@ -157,3 +127,8 @@ func get_width() -> float:
 	
 func get_combination_dict() -> Dictionary:
 	return self._combination_dict
+	
+func highlight(color_arg:Color) -> void:
+	self._item_list.set_item_custom_bg_color(0,color_arg)
+	_item_list.update() #necesario para que se repinte y se vea el cambio de color
+	
